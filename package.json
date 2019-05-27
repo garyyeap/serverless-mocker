@@ -1,6 +1,6 @@
 {
-  "name": "service-mocker-2",
-  "version": "2.2.0",
+  "name": "serverless-mocker",
+  "version": "0.1.0",
   "description": "The next generation front-end API mocking framework.",
   "main": "index.js",
   "typings": "index.d.ts",
@@ -28,14 +28,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/service-mocker/service-mocker.git"
+    "url": "git+https://github.com/garyyeap/serverless-mocker.git"
   },
   "keywords": [
     "mock",
     "service",
     "worker"
   ],
-  "author": "Service Mocker Team <https://github.com/service-mocker>",
   "contributors": [
     "Dolphin Wood <dolphin.w.e@gmail.com>",
     "Vincent Bel <buaazqh@gmail.com>",
@@ -43,9 +42,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/garyyeap/service-mocker/issues"
+    "url": "https://github.com/garyyeap/serverless-mocker/issues"
   },
-  "homepage": "https://github.com/garyyeap/service-mocker#readme",
+  "homepage": "https://github.com/garyyeap/serverless-mocker#readme",
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-core": "^6.24.1",
