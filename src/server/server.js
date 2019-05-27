@@ -1,5 +1,6 @@
 import { MockerRouter } from './router';
 import { ACTION } from '../constants/';
+import { MockerResponse } from './response';
 
 export class MockerServer {
   /**
@@ -70,9 +71,25 @@ self.addEventListener('message', async (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+  const response = new MockerResponse(event);
+  var resolved = false;
+
+  // responeWith has to exec under sync mode
+  event.respondWith(response._deferred.promise.then((res) => {
+    resolved = true;
+    return res;
+  }));
+
   MockerRouter.routers.some((router) => {
-    return router._match(event);
+    return router._match(event, response);
   });
+
+  setTimeout(() => {
+    if (resolved) return;
+    resolved = true;
+
+    fetch(event.request).then((res) => response._deferred.resolve(res));
+  }, 2000);
 });
 
 // IE will somehow fires `activate` event on form elements

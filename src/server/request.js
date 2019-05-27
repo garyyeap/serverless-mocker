@@ -84,13 +84,13 @@ export class MockerRequest extends ExtandableRequest {
     const requestURL = new URL(request.url, location.href);
     const path = base.pathname === '/'
                  ? requestURL.pathname
-                 : requestURL.pathname.replace(base.pathname, '');
+                 : requestURL.pathname.replace(requestURL.origin, '');
 
     const matches = regex.exec(path);
     const params = {};
 
     // skip full matched string at [0]
-    const max = matches.length;
+    const max = matches ? matches.length : 0;
     for (let i = 1; i < max; i++) {
       const { name } = keys[i - 1];
       params[name] = decodeParam(matches[i]);
@@ -100,19 +100,29 @@ export class MockerRequest extends ExtandableRequest {
     this._route = route;
 
     this.path = path;
+    this.origin = requestURL.origin;
     this.params = params;
     this.baseURL = baseURL;
     this.query = qs.parse(requestURL.search.slice(1)); // remove leading '?'
 
+    Object.defineProperty(this, 'url', {
+      value: this.url,
+      writable: true,
+      enumerable: true,
+      configurable: true,
+    });
+
+    Object.defineProperty(this, 'method', {
+      value: this.method,
+      writable: true,
+      enumerable: true,
+      configurable: true,
+    });
+
     // overwrite relative URL from fetch polyfill
     /* istanbul ignore if: legacy browsers only */
     if (this.url !== requestURL.href) {
-      Object.defineProperty(this, 'url', {
-        value: requestURL.href,
-        writable: false,
-        enumerable: true,
-        configurable: true,
-      });
+      this.url = requestURL.href;
     }
   }
 

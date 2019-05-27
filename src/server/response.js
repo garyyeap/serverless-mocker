@@ -62,14 +62,7 @@ export class MockerResponse {
    * @param {FetchEvent} event Fetch event
    */
   constructor(event) {
-    const {
-      _deferred,
-    } = this;
-
     this._event = event;
-
-    // everything within service worker should be asynchronous
-    event.respondWith(_deferred.promise);
   }
 
   /**

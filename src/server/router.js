@@ -5,7 +5,6 @@ import {
 } from '../utils/';
 
 import { MockerRequest } from './request';
-import { MockerResponse } from './response';
 
 const routerLog = debug.scope('router');
 
@@ -159,7 +158,7 @@ export class MockerRouter {
   _register(method, path, callback) {
     method = method.toUpperCase();
 
-    const regex = pathToRegExp(path);
+    const regex = pathToRegExp(this._basePath + path);
 
     let cb;
 
@@ -192,21 +191,13 @@ export class MockerRouter {
    * @param {FetchEvent} event Fetch event
    * @return {boolean}
    */
-  _match(event) {
-    const {
-      request,
-    } = event;
+  _match(event, response) {
 
     // `request.url` maybe relative in legacy mode
-    const url = new URL(request.url, location.href);
 
-    if (url.origin !== this._origin) {
+    if (new URL(event.request.url, location.href).origin !== this._origin) {
       return false;
     }
-
-    // strip router's base path
-    const re = new RegExp(`^${this._basePath}`);
-    const path = url.pathname.replace(re, '');
 
     for (let rule of this._rules) {
       const {
@@ -215,22 +206,18 @@ export class MockerRouter {
         callback,
       } = rule;
 
-      if (regex.test(path) && (request.method === method || rule.isAll)) {
-        //! Response object must be constructed synchronously
-        const request = new MockerRequest(event, rule);
-        const response = new MockerResponse(event);
+      const request = new MockerRequest(event, rule);
 
-        // apply (async) middleware
-        Promise.all(
-          this._middleware.map((fn) => {
-            return fn.call(event, request, response);
-          })
-        ).then(() => {
+      // apply middlewares
+      this._middleware.reduceRight((accumulator, current) => {
+        return () => current.call(event, request, response, accumulator);
+      }, () => {
+        var path = new URL(request.url, location.href).pathname;
+
+        if (regex.test(path) && (request.method === method || rule.isAll)) {
           callback.call(event, request, response);
-        });
-
-        return true;
-      }
+        }
+      })();
     }
 
     return false;
