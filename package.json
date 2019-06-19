@@ -1,6 +1,6 @@
 {
   "name": "serverless-mocker",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "The next generation front-end API mocking framework.",
   "main": "index.js",
   "typings": "index.d.ts",
@@ -28,7 +28,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/garyyeap/serverless-mocker.git"
+    "url": "git+https://github.com/outerstudio/serverless-mocker.git"
   },
   "keywords": [
     "mock",
@@ -42,9 +42,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/garyyeap/serverless-mocker/issues"
+    "url": "https://github.com/outerstudio/serverless-mocker/issues"
   },
-  "homepage": "https://github.com/garyyeap/serverless-mocker#readme",
+  "homepage": "https://github.com/outerstudio/serverless-mocker#readme",
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-core": "^6.24.1",
